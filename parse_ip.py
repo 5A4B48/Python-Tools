@@ -24,8 +24,10 @@ if sys.version_info.major <= 2:
 # Checks to see if the file exists
 if os.path.isfile(args.file):
     with open(args.file) as filehandle:
-        #sorts the ip addresses and sends to standard out
-        ips = sorted(ipaddress.ip_address(line.strip()) for line in filehandle)
+        #will help strip out whitespace lines
+        lines = (line.rstrip() for line in filehandle)
+        #sorts the ip addresses and sends to standard out if the line is not blank
+        ips = sorted(ipaddress.ip_address(line.strip()) for line in lines if line)
         #checks for the deduplication flag and will remove duplicates if enabled. 
         if args.deduplicate:
             deduplicated_ips = sorted(list(set(ips)))
