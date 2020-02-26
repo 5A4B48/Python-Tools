@@ -14,6 +14,7 @@ except:
 
 parser = argparse.ArgumentParser()                                             
 parser.add_argument("--file", "-f", type=str, required=True)
+parser.add_argument("--deduplicate", "-d", default=False, action="store_true")
 args = parser.parse_args()
 
 if sys.version_info.major <= 2:
@@ -25,4 +26,9 @@ if os.path.isfile(args.file):
     with open(args.file) as filehandle:
         #sorts the ip addresses and sends to standard out
         ips = sorted(ipaddress.ip_address(line.strip()) for line in filehandle)
-        print('\n'.join(map(str, ips)))
+        #checks for the dedupe flag and will remove duplicates
+        if args.deduplicate:
+            deduplicated_ips = sorted(list(set(ips)))
+            print('\n'.join(map(str,deduplicated_ips)))
+        else:
+            print('\n'.join(map(str, ips)))
